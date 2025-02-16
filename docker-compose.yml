@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  ghidra:
+    build: .
+    container_name: ghidra
+    ports:
+      - "5901:5901"
+    volumes:
+      - ./ghidra_projects:/root/ghidra_projects
+    networks:
+      - guacamole_network
+
+  guacamole:
+    image: guacamole/guacamole
+    container_name: guacamole
+    ports:
+      - "8080:8080"
+    environment:
+      GUACD_HOSTNAME: guacd
+      MYSQL_HOSTNAME: mysql
+      MYSQL_DATABASE: guacamole_db
+      MYSQL_USER: guacamole_user
+      MYSQL_PASSWORD: guacamole_password
+    depends_on:
+      - guacd
+      - mysql
+    networks:
+      - guacamole_network
+
+  guacd:
+    image: guacamole/guacd
+    container_name: guacd
+    networks:
+      - guacamole_network
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: guacamole_db
+      MYSQL_USER: guacamole_user
+      MYSQL_PASSWORD: guacamole_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - guacamole_network
+
+networks:
+  guacamole_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
