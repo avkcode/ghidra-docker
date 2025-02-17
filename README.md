@@ -29,6 +29,9 @@ Use Docker Compose to build and run the containers:
 bash
 Copy
 docker-compose up --build
+
+docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --mysql > initdb.sql
+
 This will:
 
 Build the Ghidra Docker image.
@@ -119,3 +122,8 @@ Acknowledgments
 Ghidra: Developed by the National Security Agency (NSA).
 Apache Guacamole: A web-based remote desktop gateway.
 By following this guide, you should be able to set up and run Ghidra with Guacamole in Docker. Let us know if you encounter any issues or have suggestions for improvement!
+
+``
+docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --mysql > initdb.sql
+docker exec -i guacamole-mysql mysql -u guacamole_user -pguacamole_password guacamole_db < initdb.sql
+``
